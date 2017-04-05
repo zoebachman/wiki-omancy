@@ -5,17 +5,14 @@
 #needs to jump to a random link on the page - plan b: press random article again
 #separate random function determines how many times this plays out
 
-import time, random, ConfigParser
-from selenium import webdriver
+import time, random
 import json
-from textblob import TextBlob
+from selenium import webdriver
 from bs4 import BeautifulSoup
+from textblob import TextBlob
 
 
-
-
-# function to get all the links
-#this still isn't working
+# function to get all the links # not working
 def get_links(page):
 	links = []
 	for link in page.find_all('a'):
@@ -29,7 +26,7 @@ def get_links(page):
 	# print "what i found", links
 	return links
 
-# function to go to a page from list of links
+# function to go to a page from list of links # not working
 def visit_pages(page):
 
 	links_list = getLinks(page)
@@ -37,21 +34,6 @@ def visit_pages(page):
 	chosen_link = random.choice(links_list)
 	print chosen_link
 	# browser.get(chosen_link)
-
-#function to choose random sentence from the page
-# def random_sentence():
-# 	body_content = browser.find_element_by_id("bodyContent")
-
-# 	for each p in body_content:
-# 		random_sentence = browser.find_element_by_tag_name('p')
-# 		sentences.append(random_sentence)
-
-
-# 	return sentences
-
-def is_short_string(string):
-    return len(string) < 10
-
 
 def Main():
 	
@@ -134,7 +116,7 @@ def Main():
 
 	print "\n"
 	print "PROPHECY:"
-	print "You will " + verb1 + " a " + word1.strip() + " when " + word2.strip() + " is " + verb2 + " with " + word3.strip()
+	print "You will " + verb1 + " a " + word1.strip() + " when " + word2.strip() + " is " + verb2 + " with a " + word3.strip()
 
 
 	browser.close()
