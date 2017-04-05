@@ -61,25 +61,21 @@ def Main():
 	# User inputs a word, goes to first page
 	print "WIKI-OMANCY"
 	print "\n"
-	user_choice = str(raw_input("What are you looking for?: "))
+	user_choice = str(raw_input("What do you seek the answer to?: "))
 	print "\n"
 
 	user_wiki = 'https://en.wikipedia.org/wiki/' + user_choice
 	browser.get(user_wiki)
-	page = BeautifulSoup(browser.page_source, "lxml")
+	page = BeautifulSoup(browser.page_source, "html")
 
-	#page titles
-	# page_titles = []
-	# page_title = browser.title
-	# page_titles.append(page_title)
-	# print page_title
 
-	# turn this into a function
 	sentences = []
+
 	page_text = page.p.get_text()
 	sentences.append(page_text)
 
 	time.sleep(random.uniform(3,6))
+
 
 	count = 0
 
@@ -89,9 +85,6 @@ def Main():
 		randomPage_Element = browser.find_element_by_id("n-randompage")
 		randomPage_Element.click()
 
-		# get <p> contents
-		page_text = page.p.get_text()
-		sentences.append(page_text)
 
 		count+=1
 	
@@ -100,16 +93,23 @@ def Main():
 		page_title = browser.title
 		print increase_asterisk + ' ' + page_title
 
+		# get <p> contents
+		# need to determine current page
+		page = BeautifulSoup(browser.page_source, "lxml")
+		page_text = page.p.get_text()
+		sentences.append(page_text)
+
+
 		time.sleep(random.uniform(3,6))
 
 	##PROPHECY GENERATOR
 	## get verbs
 	verbs = list()
-	for line in open('verbs.txt', 'r'):
+	for line in open('data/verbs.txt', 'r'):
 		line = line.strip()
 		verbs.append(line)
 
-	with open('ingWords.json') as data_file:    
+	with open('data/ingWords.json') as data_file:    
 	    ingWords = json.load(data_file)
 
 	# select two random verbs
@@ -128,9 +128,9 @@ def Main():
 	for noun in blob.noun_phrases:
 		nouns.append(noun)
 
-	word1 = str(random.choice(nouns))
-	word2 = str(random.choice(nouns))
-	word3 = str(random.choice(nouns))
+	word1 = random.choice(nouns)
+	word2 = random.choice(nouns)
+	word3 = random.choice(nouns)
 
 	print "\n"
 	print "PROPHECY:"
