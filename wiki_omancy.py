@@ -7,37 +7,27 @@
 
 import time, random, ConfigParser
 from selenium import webdriver
-from random_words import RandomWords
-# import noun_extract
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 
-def randWord():
 
-	nouns = list()
-	for line in open("nouns.txt", "r"):
-		line = line.strip()
-		# print line 
-		nouns.append(line)
-
-	word = random.choice(nouns)
-	return word
-
-def getLinks(page):
+# function to get all the links
+#this still isn't working
+def get_links(page):
 	links = []
 	for link in page.find_all('a'):
 		links.append(link)
 
 		url = link.get('href')
 		if url:
-			if '/wiki/'in url:
+			if 'wikipedia.org/wiki/'in url:
 				links.append(url)
 
 	# print "what i found", links
 	return links
 
-
-def visitPages(page):
+# function to go to a page from list of links
+def visit_pages(page):
 
 	links_list = getLinks(page)
 	# print links_list
@@ -45,39 +35,95 @@ def visitPages(page):
 	print chosen_link
 	# browser.get(chosen_link)
 
+#function to choose random sentence from the page
+# def random_sentence():
+# 	body_content = browser.find_element_by_id("bodyContent")
+
+# 	for each p in body_content:
+# 		random_sentence = browser.find_element_by_tag_name('p')
+# 		sentences.append(random_sentence)
+
+
+# 	return sentences
+
+def is_short_string(string):
+    return len(string) < 10
+
 
 def Main():
 	
 	## Initiate browser
 	browser = webdriver.Chrome()
 
-	# Go to first random wiki
-	word = randWord()
-	random_wiki = 'https://en.wikipedia.org/wiki/' + word
-
-	browser.get(random_wiki)
-	# print random_wiki
-	page_title = browser.title
-	print page_title
+	# User inputs a word, goes to first page
+	user_choice = str(raw_input("Enter something to look up on Wikipedia: "))
+	user_wiki = 'https://en.wikipedia.org/wiki/' + user_choice
+	browser.get(user_wiki)
 	page = BeautifulSoup(browser.page_source, "lxml")
-	time.sleep(random.uniform(0.5,1.4)) 
+
+	#page titles
+	# page_titles = []
+	# page_title = browser.title
+	# page_titles.append(page_title)
+	# print page_title
+
+	# turn this into a function
+	sentences = []
+	page_text = page.p.get_text()
+	sentences.append(page_text)
+
+	time.sleep(random.uniform(3,10))
 
 
-	# cycle through a random number of pages
-	# number_end = random.randint(3,4)
-	# print "(this will cycle " + str(number_end) + " time(s))"
+	count = 0
 
+	# plan b - just click on the random page
 	for i in range(3):
-		# visitPages(page)
-		#plan b
-		# browser.get('/wiki/special:random')
+		#go to random page
 		randomPage_Element = browser.find_element_by_id("n-randompage")
 		randomPage_Element.click()
-		# print randomPage_Element
-		page_title = browser.title
-		print page_title
+
+		# page_title = browser.title
+		# page_titles.append(page_title)
+		# print page_title
+
+		# get <p> contents
+		page_text = page.p.get_text()
+		sentences.append(page_text)
+
+		count+=1
+		asterisk = '*'
+		increase_asterisk = asterisk * count
+		print increase_asterisk
+
 		time.sleep(random.uniform(3,10))
-		
+
+	
+	## Get list of nouns, choose three randomly
+	# create blob
+	blob = TextBlob(str(sentences))
+
+	# create new noun list
+	nouns = []
+
+	# for each noun phrase in <p>, take phrases and add to a new list
+	for noun in blob.noun_phrases:
+		nouns.append(noun)
+
+	# verbs = []
+	# or verb in blob.noun_phrases:
+	# 	nouns.append(noun)
+
+	word1 = random.choice(nouns)
+	word2 = random.choice(nouns)
+	word3 = random.choice(nouns)
+
+	verb1 = "dine"
+	verb2 = "swimming"
+
+	print "You will " + verb1 + " a " + word1 
+	# + "when " word2 + " is " verb2 + "with " + word3
+
 
 	browser.close()
 
