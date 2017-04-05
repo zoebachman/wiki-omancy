@@ -7,8 +7,11 @@
 
 import time, random, ConfigParser
 from selenium import webdriver
+import json
 from textblob import TextBlob
 from bs4 import BeautifulSoup
+
+
 
 
 # function to get all the links
@@ -56,7 +59,11 @@ def Main():
 	browser = webdriver.Chrome()
 
 	# User inputs a word, goes to first page
-	user_choice = str(raw_input("Enter something to look up on Wikipedia: "))
+	print "WIKI-OMANCY"
+	print "\n"
+	user_choice = str(raw_input("What are you looking for?: "))
+	print "\n"
+
 	user_wiki = 'https://en.wikipedia.org/wiki/' + user_choice
 	browser.get(user_wiki)
 	page = BeautifulSoup(browser.page_source, "lxml")
@@ -72,8 +79,7 @@ def Main():
 	page_text = page.p.get_text()
 	sentences.append(page_text)
 
-	time.sleep(random.uniform(3,10))
-
+	time.sleep(random.uniform(3,6))
 
 	count = 0
 
@@ -83,23 +89,35 @@ def Main():
 		randomPage_Element = browser.find_element_by_id("n-randompage")
 		randomPage_Element.click()
 
-		# page_title = browser.title
-		# page_titles.append(page_title)
-		# print page_title
-
 		# get <p> contents
 		page_text = page.p.get_text()
 		sentences.append(page_text)
 
 		count+=1
-		asterisk = '*'
-		increase_asterisk = asterisk * count
-		print increase_asterisk
-
-		time.sleep(random.uniform(3,10))
-
 	
-	## Get list of nouns, choose three randomly
+		asterisk = '*' 
+		increase_asterisk = asterisk * count
+		page_title = browser.title
+		print increase_asterisk + ' ' + page_title
+
+		time.sleep(random.uniform(3,6))
+
+	##PROPHECY GENERATOR
+	## get verbs
+	verbs = list()
+	for line in open('verbs.txt', 'r'):
+		line = line.strip()
+		verbs.append(line)
+
+	with open('ingWords.json') as data_file:    
+	    ingWords = json.load(data_file)
+
+	# select two random verbs
+	verb1 = random.choice(verbs)
+	verb2 = random.choice(ingWords)
+
+
+	## Get list of nouns from scraped sentences, choose three randomly
 	# create blob
 	blob = TextBlob(str(sentences))
 
@@ -110,19 +128,13 @@ def Main():
 	for noun in blob.noun_phrases:
 		nouns.append(noun)
 
-	# verbs = []
-	# or verb in blob.noun_phrases:
-	# 	nouns.append(noun)
+	word1 = str(random.choice(nouns))
+	word2 = str(random.choice(nouns))
+	word3 = str(random.choice(nouns))
 
-	word1 = random.choice(nouns)
-	word2 = random.choice(nouns)
-	word3 = random.choice(nouns)
-
-	verb1 = "dine"
-	verb2 = "swimming"
-
-	print "You will " + verb1 + " a " + word1 
-	# + "when " word2 + " is " verb2 + "with " + word3
+	print "\n"
+	print "PROPHECY:"
+	print "You will " + verb1 + " a " + word1.strip() + " when " + word2.strip() + " is " + verb2 + " with " + word3.strip()
 
 
 	browser.close()
