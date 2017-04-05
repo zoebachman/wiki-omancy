@@ -59,7 +59,7 @@ def Main():
 	browser = webdriver.Chrome()
 
 	# User inputs a word, goes to first page
-	print "WIKI-OMANCY"
+	print "WIKIMANCY"
 	print "\n"
 	user_choice = str(raw_input("What do you seek the answer to?: "))
 	print "\n"
