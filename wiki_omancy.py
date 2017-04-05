@@ -66,7 +66,7 @@ def Main():
 
 	user_wiki = 'https://en.wikipedia.org/wiki/' + user_choice
 	browser.get(user_wiki)
-	page = BeautifulSoup(browser.page_source, "html")
+	page = BeautifulSoup(browser.page_source, "lxml")
 
 
 	sentences = []
@@ -74,7 +74,7 @@ def Main():
 	page_text = page.p.get_text()
 	sentences.append(page_text)
 
-	time.sleep(random.uniform(3,6))
+	time.sleep(random.uniform(2,4))
 
 
 	count = 0
@@ -100,7 +100,7 @@ def Main():
 		sentences.append(page_text)
 
 
-		time.sleep(random.uniform(3,6))
+		time.sleep(random.uniform(2,4))
 
 	##PROPHECY GENERATOR
 	## get verbs
